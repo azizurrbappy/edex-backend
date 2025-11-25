@@ -36,6 +36,12 @@ async function run() {
       res.send(result);
     });
 
+    app.post('/courses', async (req, res) => {
+      const newProperty = req.body;
+      const result = await propertiesCollection.insertOne(newProperty);
+      res.send(result);
+    });
+
     app.get('/instructors', async (req, res) => {
       const cursor = instructorsCollection.find();
       const result = await cursor.toArray();

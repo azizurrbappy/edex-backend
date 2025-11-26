@@ -3,7 +3,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // Middleware
 app.use(express.json());
@@ -36,9 +36,26 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/managecourse', async (req, res) => {
+      const { email } = req.query;
+      const query = { email: email };
+
+      const cursor = coursesCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     app.post('/courses', async (req, res) => {
       const newProperty = req.body;
-      const result = await propertiesCollection.insertOne(newProperty);
+      const result = await coursesCollection.insertOne(newProperty);
+      res.send(result);
+    });
+
+    app.delete('/courses/:id', async (req, res) => {
+      const { id } = req.params;
+      const query = { _id: new ObjectId(id) };
+
+      const result = await coursesCollection.deleteOne(query);
       res.send(result);
     });
 
